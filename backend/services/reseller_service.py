@@ -20,8 +20,11 @@ class ResellerService:
         return reseller
     
     async def get_all_resellers(self) -> List[Reseller]:
-        """Obtém todas as revendas ativas"""
-        cursor = self.collection.find({"active": True})
+        """Obtém todas as revendas ativas que possuem coordenadas"""
+        cursor = self.collection.find({
+            "active": True,
+            "coordinates": {"$exists": True, "$ne": None}
+        })
         resellers = []
         
         async for doc in cursor:
