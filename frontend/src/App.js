@@ -3,6 +3,7 @@ import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import { ResellerLocator } from "./components/ResellerLocator";
+import { AdminPanel } from "./components/AdminPanel";
 import { Toaster } from "./components/ui/sonner";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
