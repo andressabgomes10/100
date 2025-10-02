@@ -170,7 +170,7 @@ export const AdminPanel = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Estatísticas */}
+        {/* Estatísticas Otimizadas */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <Card>
@@ -180,6 +180,7 @@ export const AdminPanel = () => {
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-600">Total Revendas</p>
                     <p className="text-2xl font-bold text-gray-900">{stats.total_resellers?.toLocaleString()}</p>
+                    <p className="text-xs text-green-600">{stats.active_resellers} ativas</p>
                   </div>
                 </div>
               </CardContent>
@@ -192,6 +193,7 @@ export const AdminPanel = () => {
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-600">Com Dados CNPJ</p>
                     <p className="text-2xl font-bold text-gray-900">{stats.with_cnpj_data?.toLocaleString()}</p>
+                    <p className="text-xs text-blue-600">{stats.with_phone} com telefone</p>
                   </div>
                 </div>
               </CardContent>
@@ -204,6 +206,7 @@ export const AdminPanel = () => {
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-600">Com Coordenadas</p>
                     <p className="text-2xl font-bold text-gray-900">{stats.with_coordinates?.toLocaleString()}</p>
+                    <p className="text-xs text-purple-600">{stats.google_maps_coords} Google Maps</p>
                   </div>
                 </div>
               </CardContent>
@@ -216,6 +219,7 @@ export const AdminPanel = () => {
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-600">% Enriquecido</p>
                     <p className="text-2xl font-bold text-gray-900">{stats.enrichment_percentage}%</p>
+                    <p className="text-xs text-orange-600">{stats.high_priority} alta prioridade</p>
                   </div>
                 </div>
               </CardContent>
