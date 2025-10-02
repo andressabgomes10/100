@@ -1,40 +1,11 @@
-# Ignorar tudo exceto arquivos essenciais do projeto
-OneDrive*
+# Ignorar tudo exceto o diretório desenvolvimento
+API/
+bkp/
+Landing/
 *.lnk
 desktop.ini
 Thumbs.db
 .DS_Store
 
-# Manter apenas arquivos do projeto
-!package.json
-!package-lock.json
-!tsconfig.json
-!src/
-!dist/
-!Dockerfile
-!Procfile
-!index.js
-!app.json
-!railway.toml
-!supabase-schema.sql
-!env.example
-!env.production
-!ecosystem.config.js
-!nginx.conf
-!docker-compose.yml
-!docs/
-!data/
-!db/
-!*.md
-!*.sql
-!*.sh
-!*.ps1
-!*.js
-!*.ts
-!*.json
-!*.yaml
-!*.yml
-!*.toml
-!*.conf
-!*.example
-!*.production
+# Manter apenas o diretório desenvolvimento
+!desenvolvimento/
