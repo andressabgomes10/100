@@ -48,47 +48,6 @@ class CEPService:
             
         except Exception as e:
             return None
-                if viacep_data.get('localidade'):
-                    address_parts.append(viacep_data['localidade'])
-                if viacep_data.get('uf'):
-                    address_parts.append(viacep_data['uf'])
-                
-                if not address_parts:
-                    return None
-                
-                address = ", ".join(address_parts) + ", Brasil"
-                
-                # Geocoding via Nominatim (OpenStreetMap)
-                nominatim_response = await client.get(
-                    "https://nominatim.openstreetmap.org/search",
-                    params={
-                        'q': address,
-                        'format': 'json',
-                        'limit': 1,
-                        'countrycodes': 'br'
-                    },
-                    headers={'User-Agent': 'Nacional-Gas-Locator/1.0'},
-                    timeout=5.0
-                )
-                
-                if nominatim_response.status_code != 200:
-                    return None
-                
-                nominatim_data = nominatim_response.json()
-                
-                if not nominatim_data:
-                    return None
-                
-                location = nominatim_data[0]
-                
-                return {
-                    'lat': float(location['lat']),
-                    'lng': float(location['lon'])
-                }
-                
-        except Exception as e:
-            print(f"Erro ao buscar coordenadas para CEP {cep}: {str(e)}")
-            return None
     
     @staticmethod
     def get_fallback_coordinates(cep: str) -> Optional[Dict[str, float]]:
