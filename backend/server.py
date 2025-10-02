@@ -142,6 +142,146 @@ async def get_all_resellers():
             detail="Erro interno do servidor."
         )
 
+# Novas APIs para CNPJ e Geocoding
+@api_router.post("/cnpj/lookup", response_model=CNPJResponse)
+async def lookup_cnpj(request: CNPJRequest):
+    """
+    Busca dados de uma empresa por CNPJ usando BrasilAPI
+    """
+    try:
+        cnpj_data = await CNPJService.get_company_data(request.cnpj)
+        
+        if cnpj_data:
+            return CNPJResponse(
+                success=True,
+                data=cnpj_data,
+                message="Dados da empresa encontrados com sucesso"
+            )
+        else:
+            return CNPJResponse(
+                success=False,
+                data=None,
+                message="CNPJ não encontrado ou inválido"
+            )
+            
+    except Exception as e:
+        logger.error(f"Erro na consulta CNPJ: {str(e)}")
+        return CNPJResponse(
+            success=False,
+            data=None,
+            message=f"Erro interno: {str(e)}"
+        )
+
+@api_router.post("/geocode", response_model=GeocodeResponse)
+async def geocode_address(request: GeocodeRequest):
+    """
+    Busca coordenadas de um endereço usando OpenStreetMap
+    """
+    try:
+        coord_data = await GeocodingService.get_coordinates_from_address(
+            address=request.address,
+            city=request.city,
+            state=request.state
+        )
+        
+        if coord_data:
+            coordinates = {
+                'lat': coord_data['lat'],
+                'lng': coord_data['lng']
+            }
+            return GeocodeResponse(
+                success=True,
+                data=coordinates,
+                message="Coordenadas encontradas com sucesso"
+            )
+        else:
+            return GeocodeResponse(
+                success=False,
+                data=None,
+                message="Endereço não encontrado"
+            )
+            
+    except Exception as e:
+        logger.error(f"Erro na geocodificação: {str(e)}")
+        return GeocodeResponse(
+            success=False,
+            data=None,
+            message=f"Erro interno: {str(e)}"
+        )
+
+# APIs para processamento de dados
+@api_router.post("/data/import-csv", response_model=ImportCSVResponse)
+async def import_csv_data():
+    """
+    Importa dados do CSV de revendas
+    """
+    try:
+        csv_path = "/app/backend/data/revendas.csv"
+        result = await data_enrichment_service.import_csv_file(csv_path)
+        
+        return ImportCSVResponse(
+            success=result['success'],
+            message=result['message'],
+            total_imported=result['total_imported'],
+            total_enriched=0,
+            errors=result['errors']
+        )
+        
+    except Exception as e:
+        logger.error(f"Erro na importação do CSV: {str(e)}")
+        return ImportCSVResponse(
+            success=False,
+            message=f"Erro na importação: {str(e)}",
+            total_imported=0,
+            total_enriched=0,
+            errors=[str(e)]
+        )
+
+@api_router.post("/data/enrich-all", response_model=ImportCSVResponse)
+async def enrich_all_data():
+    """
+    Enriquece dados de todas as revendas com informações de CNPJ e coordenadas
+    """
+    try:
+        result = await data_enrichment_service.enrich_all_data(batch_size=5)
+        
+        return ImportCSVResponse(
+            success=result['success'],
+            message=result['message'],
+            total_imported=result['total_processed'],
+            total_enriched=result['total_enriched'],
+            errors=result.get('errors', [])
+        )
+        
+    except Exception as e:
+        logger.error(f"Erro no enriquecimento de dados: {str(e)}")
+        return ImportCSVResponse(
+            success=False,
+            message=f"Erro no enriquecimento: {str(e)}",
+            total_imported=0,
+            total_enriched=0,
+            errors=[str(e)]
+        )
+
+@api_router.get("/data/stats")
+async def get_data_stats():
+    """
+    Retorna estatísticas dos dados de revendas
+    """
+    try:
+        stats = await data_enrichment_service.get_enrichment_stats()
+        return {
+            "success": True,
+            "data": stats
+        }
+        
+    except Exception as e:
+        logger.error(f"Erro ao obter estatísticas: {str(e)}")
+        return {
+            "success": False,
+            "message": f"Erro: {str(e)}"
+        }
+
 # Include the router in the main app
 app.include_router(api_router)
 
