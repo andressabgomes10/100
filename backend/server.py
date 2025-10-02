@@ -19,7 +19,7 @@ from models.reseller import (
 from services.reseller_service import ResellerService
 from services.cep_service import CEPService
 from services.cnpj_service import CNPJService
-from services.geocoding_service import GeocodingService
+from services.enhanced_geocoding_service import enhanced_geocoding_service
 from services.data_enrichment_service import DataEnrichmentService
 
 ROOT_DIR = Path(__file__).parent
