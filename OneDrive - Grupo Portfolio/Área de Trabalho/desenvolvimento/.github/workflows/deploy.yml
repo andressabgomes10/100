@@ -57,7 +57,7 @@ jobs:
       uses: railwayapp/railway-deploy@v1
       with:
         railway-token: ${{ secrets.RAILWAY_TOKEN }}
-        service: ${{ secrets.RAILWAY_SERVICE }}
+        project-id: d7cda4f3-aa85-4a59-b724-dee021eab566
         
     - name: Health check
       run: |
