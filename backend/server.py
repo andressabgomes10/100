@@ -178,7 +178,7 @@ async def geocode_address(request: GeocodeRequest):
     Busca coordenadas de um endereço usando OpenStreetMap
     """
     try:
-        coord_data = await GeocodingService.get_coordinates_from_address(
+        coord_data = await enhanced_geocoding_service.get_coordinates_from_address(
             address=request.address,
             city=request.city,
             state=request.state
