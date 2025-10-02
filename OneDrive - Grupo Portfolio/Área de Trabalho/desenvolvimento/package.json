@@ -7,22 +7,9 @@
     "dev": "tsx watch src/server.ts",
     "build": "rimraf dist && tsc",
     "start": "node index.js",
-    "start:prod": "NODE_ENV=production node dist/server.js",
     "lint": "eslint . --ext .ts",
     "seed": "tsx src/etl/seed.ts",
-    "etl:csv": "tsx src/etl/load-csv.ts",
-    "pm2:start": "pm2 start ecosystem.config.js --env production",
-    "pm2:stop": "pm2 stop revenda-api",
-    "pm2:restart": "pm2 restart revenda-api",
-    "pm2:reload": "pm2 reload revenda-api",
-    "pm2:logs": "pm2 logs revenda-api",
-    "pm2:monit": "pm2 monit",
-    "backup": "chmod +x backup.sh && ./backup.sh",
-    "deploy": "chmod +x deploy.sh && ./deploy.sh",
-    "monitor": "chmod +x monitor.sh && ./monitor.sh",
-    "docker:build": "docker build -t revenda-api .",
-    "docker:run": "docker run -p 3001:3001 --env-file .env revenda-api",
-    "docker:compose": "docker-compose up -d"
+    "etl:csv": "tsx src/etl/load-csv.ts"
   },
   "keywords": [
     "api",
