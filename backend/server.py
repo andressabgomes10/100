@@ -300,15 +300,16 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Startup event to populate initial data
+# Startup event
 @app.on_event("startup")
 async def startup_db():
-    """Initialize database with sample data if empty"""
+    """Initialize database"""
     try:
-        await reseller_service.populate_initial_data()
-        logger.info("✅ Database initialized successfully")
+        logger.info("✅ Database connected successfully")
+        # Note: Use /api/data/import-csv to import real reseller data
+        # Use /api/data/enrich-all to enrich with CNPJ and geocoding data
     except Exception as e:
-        logger.error(f"❌ Error initializing database: {str(e)}")
+        logger.error(f"❌ Error connecting to database: {str(e)}")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
