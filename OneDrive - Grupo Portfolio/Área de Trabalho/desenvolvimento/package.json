@@ -34,6 +34,14 @@
   ],
   "author": "",
   "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "railway": {
+    "buildCommand": "npm run build",
+    "startCommand": "npm start"
+  },
   "dependencies": {
     "@fastify/cors": "^8.4.0",
     "@fastify/rate-limit": "^8.0.3",
