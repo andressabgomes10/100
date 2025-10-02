@@ -248,35 +248,35 @@ export const AdminPanel = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">Importar Dados</h3>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">📊 Importar Dados Otimizados</h3>
                       <p className="text-sm text-gray-600 mb-4">
-                        Importa as revendas do arquivo CSV com razão social e CNPJ.
+                        Importa dados do CSV normalizado com estrutura otimizada, incluindo prioridades e segmentação.
                       </p>
                       <Button 
-                        onClick={handleImportCSV}
+                        onClick={handleImportOptimized}
                         disabled={loading}
-                        className="w-full"
+                        className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
                       >
                         {loading ? (
                           <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
                         ) : (
                           <Database className="h-4 w-4 mr-2" />
                         )}
-                        Importar CSV
+                        Importar CSV Otimizado
                       </Button>
                     </div>
                   </div>
 
                   <div className="space-y-4">
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">Enriquecer Dados</h3>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">🧠 Enriquecimento Inteligente</h3>
                       <p className="text-sm text-gray-600 mb-4">
-                        Busca endereços e coordenadas para todas as revendas usando CNPJ.
+                        Algoritmo otimizado que prioriza revendas importantes e processa em lotes eficientes com Google Maps.
                       </p>
                       <Button 
-                        onClick={handleEnrichAll}
+                        onClick={handleSmartEnrich}
                         disabled={loading || enrichmentRunning}
-                        className="w-full"
+                        className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                         variant={enrichmentRunning ? "secondary" : "default"}
                       >
                         {enrichmentRunning ? (
@@ -284,7 +284,7 @@ export const AdminPanel = () => {
                         ) : (
                           <MapPin className="h-4 w-4 mr-2" />
                         )}
-                        {enrichmentRunning ? 'Enriquecendo...' : 'Enriquecer Todos'}
+                        {enrichmentRunning ? 'Processando Inteligente...' : 'Enriquecimento Inteligente'}
                       </Button>
                     </div>
                   </div>
