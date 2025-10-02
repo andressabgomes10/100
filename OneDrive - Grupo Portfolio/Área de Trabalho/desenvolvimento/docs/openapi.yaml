@@ -1,0 +1,431 @@
+openapi: 3.0.3
+info:
+  title: API Revendas NGD
+  description: API para encontrar revenda mais próxima por CEP
+  version: 1.0.0
+  contact:
+    name: Suporte API
+    email: suporte@nacionalgas.com.br
+servers:
+  - url: http://localhost:3001
+    description: Servidor de desenvolvimento
+  - url: https://api.nacionalgas.com.br
+    description: Servidor de produção
+security:
+  - ApiKeyAuth: []
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: Chave de API para autenticação
+  schemas:
+    CepInfo:
+      type: object
+      required: [cep, cidade, uf, provider]
+      properties:
+        cep: 
+          type: string
+          example: "60115000"
+          description: CEP com 8 dígitos
+        rua: 
+          type: string
+          nullable: true
+          example: "Rua Dr. José Lourenço"
+        bairro: 
+          type: string
+          nullable: true
+          example: "Aldeota"
+        cidade: 
+          type: string
+          example: "Fortaleza"
+        uf: 
+          type: string
+          example: "CE"
+        ibge: 
+          type: string
+          nullable: true
+        provider: 
+          type: string
+          enum: [brasilapi, viacep]
+          example: "brasilapi"
+        lat: 
+          type: number
+          nullable: true
+          example: -3.73
+        lng: 
+          type: number
+          nullable: true
+          example: -38.52
+    Revenda:
+      type: object
+      required: [cnpj, ativo]
+      properties:
+        cnpj: 
+          type: string
+          example: "12345678000199"
+          pattern: "^\\d{14}$"
+        nome_fantasia: 
+          type: string
+          nullable: true
+          example: "Revenda Centro"
+        razao_social: 
+          type: string
+          nullable: true
+        cep: 
+          type: string
+          nullable: true
+          pattern: "^\\d{8}$"
+        endereco: 
+          type: string
+          nullable: true
+        bairro: 
+          type: string
+          nullable: true
+        cidade: 
+          type: string
+          nullable: true
+        uf: 
+          type: string
+          nullable: true
+          minLength: 2
+          maxLength: 2
+        telefone: 
+          type: string
+          nullable: true
+        whatsapp: 
+          type: string
+          nullable: true
+        canal_preferencial: 
+          type: string
+          enum: [whatsapp, telefone]
+          nullable: true
+        latitude: 
+          type: number
+          nullable: true
+          minimum: -90
+          maximum: 90
+        longitude: 
+          type: number
+          nullable: true
+          minimum: -180
+          maximum: 180
+        ativo: 
+          type: boolean
+          example: true
+        service_radius_km: 
+          type: number
+          nullable: true
+          minimum: 0
+        prioridade: 
+          type: integer
+          example: 0
+        atende_empresarial: 
+          type: boolean
+          example: true
+        atende_residencial: 
+          type: boolean
+          example: true
+    RevendaComDistancia:
+      allOf:
+        - $ref: "#/components/schemas/Revenda"
+        - type: object
+          properties:
+            distancia_km:
+              type: number
+              example: 3.42
+    RevendaMaisProximaResponse:
+      type: object
+      properties:
+        revenda:
+          $ref: "#/components/schemas/RevendaComDistancia"
+        origem:
+          type: object
+          properties:
+            cep:
+              type: string
+            cidade:
+              type: string
+            uf:
+              type: string
+            lat:
+              type: number
+              nullable: true
+            lng:
+              type: number
+              nullable: true
+        criterio:
+          type: string
+          example: "nearest_with_rules"
+        observacoes:
+          type: array
+          items:
+            type: string
+          example: ["raio_ok", "prioridade_aplicada"]
+    HealthResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: true
+        version:
+          type: string
+          example: "1.0.0"
+        timestamp:
+          type: string
+          format: date-time
+        uptime_s:
+          type: integer
+          example: 3600
+        env:
+          type: string
+          example: "development"
+        node_version:
+          type: string
+          example: "v18.17.0"
+    StatsResponse:
+      type: object
+      properties:
+        cep_lookups:
+          type: integer
+          example: 120
+        cep_cache_hits:
+          type: integer
+          example: 85
+        nearest_queries:
+          type: integer
+          example: 96
+        no_coverage:
+          type: integer
+          example: 4
+        provider_errors:
+          type: object
+          properties:
+            brasilapi:
+              type: integer
+              example: 1
+            viacep:
+              type: integer
+              example: 0
+        revendas:
+          type: object
+          properties:
+            total:
+              type: integer
+            ativas:
+              type: integer
+            com_coordenadas:
+              type: integer
+            atendem_empresarial:
+              type: integer
+            atendem_residencial:
+              type: integer
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "CEP inválido"
+        code:
+          type: string
+          example: "INVALID_CEP"
+        details:
+          type: object
+          nullable: true
+paths:
+  /health:
+    get:
+      security: []  # público
+      summary: Health Check
+      description: Verificação de saúde da aplicação (público)
+      tags: [System]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+  /stats:
+    get:
+      summary: Estatísticas
+      description: Estatísticas da aplicação
+      tags: [System]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatsResponse"
+  /cep/{cep}:
+    get:
+      summary: Buscar informações de CEP
+      description: Busca informações de um CEP usando BrasilAPI com fallback ViaCEP
+      tags: [CEP]
+      parameters:
+        - in: path
+          name: cep
+          required: true
+          schema: 
+            type: string
+            pattern: "^\\d{8}$"
+            example: "60115000"
+          description: CEP com 8 dígitos
+      responses:
+        "200":
+          description: Informações do CEP encontradas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CepInfo"
+        "400":
+          description: CEP inválido
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: CEP não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: API Key inválida ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /revenda-mais-proxima:
+    post:
+      summary: Encontrar revenda mais próxima por CEP
+      description: Encontra a revenda mais próxima de um CEP usando cálculo de distância
+      tags: [Revendas]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cep]
+              properties:
+                cep:
+                  type: string
+                  pattern: "^\\d{8}$"
+                  example: "60115000"
+                  description: CEP com 8 dígitos
+                tipo:
+                  type: string
+                  enum: [empresarial, residencial]
+                  example: "empresarial"
+                  description: Tipo de atendimento
+      responses:
+        "200":
+          description: Revenda mais próxima encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RevendaMaisProximaResponse"
+        "404":
+          description: Sem cobertura para este CEP
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /revendas:
+    get:
+      summary: Listar revendas
+      description: Lista revendas com paginação
+      tags: [Revendas]
+      parameters:
+        - in: query
+          name: limit
+          schema: 
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 100
+          description: Número máximo de resultados
+        - in: query
+          name: offset
+          schema: 
+            type: integer
+            default: 0
+            minimum: 0
+          description: Número de resultados para pular
+      responses:
+        "200":
+          description: Lista de revendas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Revenda"
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+    post:
+      summary: Criar ou atualizar revenda
+      description: Cria nova revenda ou atualiza existente por CNPJ (idempotente)
+      tags: [Revendas]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Revenda"
+      responses:
+        "200":
+          description: Revenda criada ou atualizada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Revenda"
+        "400":
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /revendas/{cnpj}:
+    get:
+      summary: Obter revenda por CNPJ
+      description: Busca revenda específica por CNPJ
+      tags: [Revendas]
+      parameters:
+        - in: path
+          name: cnpj
+          required: true
+          schema: 
+            type: string
+            pattern: "^\\d{14}$"
+            example: "12345678000199"
+          description: CNPJ com 14 dígitos
+      responses:
+        "200":
+          description: Revenda encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Revenda"
+        "404":
+          description: Revenda não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"

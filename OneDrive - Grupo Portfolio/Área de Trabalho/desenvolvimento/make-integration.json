@@ -1,0 +1,283 @@
+{
+  "name": "Revenda Proximidade API - Make Integration",
+  "description": "Configuração para integração com Make (Integromat)",
+  "version": "1.0.0",
+  "api": {
+    "base_url": "http://localhost:3001",
+    "production_url": "https://api.nacionalgas.com.br",
+    "authentication": {
+      "type": "api_key",
+      "header": "x-api-key",
+      "value": "NG_API_SK_1759414399452_aqmotc1wab70nels6brz2fo"
+    }
+  },
+  "endpoints": {
+    "health": {
+      "method": "GET",
+      "path": "/health",
+      "description": "Verificação de saúde da API (público)",
+      "authentication": false
+    },
+    "cep": {
+      "method": "GET", 
+      "path": "/cep/{cep}",
+      "description": "Buscar informações de CEP",
+      "parameters": {
+        "cep": {
+          "type": "string",
+          "required": true,
+          "pattern": "^\\d{8}$",
+          "example": "60115000"
+        }
+      }
+    },
+    "revenda_mais_proxima": {
+      "method": "POST",
+      "path": "/revenda-mais-proxima",
+      "description": "Encontrar revenda mais próxima por CEP",
+      "body": {
+        "cep": {
+          "type": "string",
+          "required": true,
+          "pattern": "^\\d{8}$"
+        },
+        "tipo": {
+          "type": "string",
+          "required": false,
+          "enum": ["empresarial", "residencial"]
+        }
+      }
+    },
+    "revenda_por_coordenadas": {
+      "method": "POST",
+      "path": "/test/revenda-mais-proxima",
+      "description": "Encontrar revenda mais próxima por coordenadas",
+      "body": {
+        "lat": {
+          "type": "number",
+          "required": true,
+          "minimum": -90,
+          "maximum": 90
+        },
+        "lng": {
+          "type": "number", 
+          "required": true,
+          "minimum": -180,
+          "maximum": 180
+        },
+        "tipo": {
+          "type": "string",
+          "required": false,
+          "enum": ["empresarial", "residencial"]
+        }
+      }
+    },
+    "listar_revendas": {
+      "method": "GET",
+      "path": "/revendas",
+      "description": "Listar revendas com paginação",
+      "query_parameters": {
+        "limit": {
+          "type": "integer",
+          "required": false,
+          "default": 50,
+          "minimum": 1,
+          "maximum": 100
+        },
+        "offset": {
+          "type": "integer",
+          "required": false,
+          "default": 0,
+          "minimum": 0
+        }
+      }
+    },
+    "buscar_revenda": {
+      "method": "GET",
+      "path": "/revendas/{cnpj}",
+      "description": "Buscar revenda por CNPJ",
+      "parameters": {
+        "cnpj": {
+          "type": "string",
+          "required": true,
+          "pattern": "^\\d{14}$",
+          "example": "12345678000199"
+        }
+      }
+    },
+    "salvar_revenda": {
+      "method": "POST",
+      "path": "/revendas",
+      "description": "Criar ou atualizar revenda",
+      "body": {
+        "cnpj": {
+          "type": "string",
+          "required": true,
+          "pattern": "^\\d{14}$"
+        },
+        "nome_fantasia": {
+          "type": "string",
+          "required": false
+        },
+        "razao_social": {
+          "type": "string",
+          "required": false
+        },
+        "cep": {
+          "type": "string",
+          "required": false,
+          "pattern": "^\\d{8}$"
+        },
+        "endereco": {
+          "type": "string",
+          "required": false
+        },
+        "cidade": {
+          "type": "string",
+          "required": false
+        },
+        "uf": {
+          "type": "string",
+          "required": false,
+          "minLength": 2,
+          "maxLength": 2
+        },
+        "telefone": {
+          "type": "string",
+          "required": false
+        },
+        "whatsapp": {
+          "type": "string",
+          "required": false
+        },
+        "latitude": {
+          "type": "number",
+          "required": false,
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": "number",
+          "required": false,
+          "minimum": -180,
+          "maximum": 180
+        },
+        "ativo": {
+          "type": "boolean",
+          "required": false,
+          "default": true
+        },
+        "atende_empresarial": {
+          "type": "boolean",
+          "required": false,
+          "default": true
+        },
+        "atende_residencial": {
+          "type": "boolean",
+          "required": false,
+          "default": true
+        }
+      }
+    },
+    "estatisticas": {
+      "method": "GET",
+      "path": "/stats",
+      "description": "Obter estatísticas da API"
+    }
+  },
+  "make_scenarios": {
+    "buscar_revenda_por_cep": {
+      "name": "Buscar Revenda por CEP",
+      "description": "Encontra a revenda mais próxima baseada no CEP do cliente",
+      "steps": [
+        {
+          "module": "HTTP > Make a Request",
+          "config": {
+            "url": "{{api.base_url}}/cep/{{cep}}",
+            "method": "GET",
+            "headers": {
+              "x-api-key": "{{api.key}}"
+            }
+          }
+        },
+        {
+          "module": "HTTP > Make a Request", 
+          "config": {
+            "url": "{{api.base_url}}/revenda-mais-proxima",
+            "method": "POST",
+            "headers": {
+              "x-api-key": "{{api.key}}",
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "cep": "{{cep}}",
+              "tipo": "{{tipo_atendimento}}"
+            }
+          }
+        }
+      ]
+    },
+    "webhook_revenda": {
+      "name": "Webhook - Nova Revenda",
+      "description": "Recebe dados de nova revenda via webhook",
+      "steps": [
+        {
+          "module": "Webhooks > Custom Webhook",
+          "config": {
+            "url": "{{webhook_url}}/nova-revenda"
+          }
+        },
+        {
+          "module": "HTTP > Make a Request",
+          "config": {
+            "url": "{{api.base_url}}/revendas",
+            "method": "POST",
+            "headers": {
+              "x-api-key": "{{api.key}}",
+              "Content-Type": "application/json"
+            },
+            "body": "{{webhook_data}}"
+          }
+        }
+      ]
+    }
+  },
+  "webhook_endpoints": {
+    "nova_revenda": {
+      "path": "/webhook/nova-revenda",
+      "method": "POST",
+      "description": "Recebe dados de nova revenda",
+      "authentication": {
+        "type": "api_key",
+        "header": "x-api-key"
+      }
+    },
+    "atualizar_revenda": {
+      "path": "/webhook/atualizar-revenda", 
+      "method": "PUT",
+      "description": "Atualiza dados de revenda existente",
+      "authentication": {
+        "type": "api_key",
+        "header": "x-api-key"
+      }
+    }
+  },
+  "environment_variables": {
+    "development": {
+      "API_URL": "http://localhost:3001",
+      "API_KEY": "changeme"
+    },
+    "production": {
+      "API_URL": "https://api.nacionalgas.com.br",
+      "API_KEY": "sua_chave_producao_aqui"
+    }
+  },
+  "testing": {
+    "test_cep": "60115000",
+    "test_coordinates": {
+      "lat": -3.73,
+      "lng": -38.52
+    },
+    "test_cnpj": "12345678000199"
+  }
+}

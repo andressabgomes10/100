@@ -1,0 +1,310 @@
+{
+  "name": "Revenda Proximidade API - Make Integration (Produção)",
+  "description": "Configuração para integração com Make (Integromat) - Versão Produção",
+  "version": "1.0.0",
+  "api": {
+    "base_url": "https://seu-projeto-production.up.railway.app",
+    "development_url": "http://localhost:3001",
+    "authentication": {
+      "type": "api_key",
+      "header": "x-api-key",
+      "value": "NG_API_SK_1759414399452_aqmotc1wab70nels6brz2fo"
+    }
+  },
+  "endpoints": {
+    "health": {
+      "method": "GET",
+      "path": "/health",
+      "description": "Verificação de saúde da API (público)",
+      "authentication": false,
+      "example_url": "https://seu-projeto-production.up.railway.app/health"
+    },
+    "cep": {
+      "method": "GET", 
+      "path": "/cep/{cep}",
+      "description": "Buscar informações de CEP",
+      "authentication": true,
+      "parameters": {
+        "cep": {
+          "type": "string",
+          "required": true,
+          "pattern": "^\\d{8}$",
+          "example": "60115000"
+        }
+      },
+      "example_url": "https://seu-projeto-production.up.railway.app/cep/60115000"
+    },
+    "revenda_mais_proxima": {
+      "method": "POST",
+      "path": "/revenda-mais-proxima",
+      "description": "Encontrar revenda mais próxima por CEP",
+      "authentication": true,
+      "body": {
+        "cep": {
+          "type": "string",
+          "required": true,
+          "pattern": "^\\d{8}$"
+        },
+        "tipo": {
+          "type": "string",
+          "required": false,
+          "enum": ["empresarial", "residencial"]
+        }
+      },
+      "example_url": "https://seu-projeto-production.up.railway.app/revenda-mais-proxima"
+    },
+    "revenda_por_coordenadas": {
+      "method": "POST",
+      "path": "/test/revenda-mais-proxima",
+      "description": "Encontrar revenda mais próxima por coordenadas",
+      "authentication": true,
+      "body": {
+        "lat": {
+          "type": "number",
+          "required": true,
+          "minimum": -90,
+          "maximum": 90
+        },
+        "lng": {
+          "type": "number", 
+          "required": true,
+          "minimum": -180,
+          "maximum": 180
+        },
+        "tipo": {
+          "type": "string",
+          "required": false,
+          "enum": ["empresarial", "residencial"]
+        }
+      },
+      "example_url": "https://seu-projeto-production.up.railway.app/test/revenda-mais-proxima"
+    },
+    "listar_revendas": {
+      "method": "GET",
+      "path": "/revendas",
+      "description": "Listar revendas com paginação",
+      "authentication": true,
+      "query_parameters": {
+        "limit": {
+          "type": "integer",
+          "required": false,
+          "default": 50,
+          "minimum": 1,
+          "maximum": 100
+        },
+        "offset": {
+          "type": "integer",
+          "required": false,
+          "default": 0,
+          "minimum": 0
+        }
+      },
+      "example_url": "https://seu-projeto-production.up.railway.app/revendas?limit=10&offset=0"
+    },
+    "buscar_revenda": {
+      "method": "GET",
+      "path": "/revendas/{cnpj}",
+      "description": "Buscar revenda por CNPJ",
+      "authentication": true,
+      "parameters": {
+        "cnpj": {
+          "type": "string",
+          "required": true,
+          "pattern": "^\\d{14}$",
+          "example": "12345678000199"
+        }
+      },
+      "example_url": "https://seu-projeto-production.up.railway.app/revendas/12345678000199"
+    },
+    "salvar_revenda": {
+      "method": "POST",
+      "path": "/revendas",
+      "description": "Criar ou atualizar revenda",
+      "authentication": true,
+      "body": {
+        "cnpj": {
+          "type": "string",
+          "required": true,
+          "pattern": "^\\d{14}$"
+        },
+        "nome_fantasia": {
+          "type": "string",
+          "required": false
+        },
+        "razao_social": {
+          "type": "string",
+          "required": false
+        },
+        "cep": {
+          "type": "string",
+          "required": false,
+          "pattern": "^\\d{8}$"
+        },
+        "endereco": {
+          "type": "string",
+          "required": false
+        },
+        "cidade": {
+          "type": "string",
+          "required": false
+        },
+        "uf": {
+          "type": "string",
+          "required": false,
+          "minLength": 2,
+          "maxLength": 2
+        },
+        "telefone": {
+          "type": "string",
+          "required": false
+        },
+        "whatsapp": {
+          "type": "string",
+          "required": false
+        },
+        "latitude": {
+          "type": "number",
+          "required": false,
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": "number",
+          "required": false,
+          "minimum": -180,
+          "maximum": 180
+        },
+        "ativo": {
+          "type": "boolean",
+          "required": false,
+          "default": true
+        },
+        "atende_empresarial": {
+          "type": "boolean",
+          "required": false,
+          "default": true
+        },
+        "atende_residencial": {
+          "type": "boolean",
+          "required": false,
+          "default": true
+        }
+      },
+      "example_url": "https://seu-projeto-production.up.railway.app/revendas"
+    },
+    "estatisticas": {
+      "method": "GET",
+      "path": "/stats",
+      "description": "Obter estatísticas da API",
+      "authentication": true,
+      "example_url": "https://seu-projeto-production.up.railway.app/stats"
+    }
+  },
+  "make_scenarios": {
+    "buscar_revenda_por_cep": {
+      "name": "Buscar Revenda por CEP - Produção",
+      "description": "Encontra a revenda mais próxima baseada no CEP do cliente",
+      "steps": [
+        {
+          "module": "HTTP > Make a Request",
+          "config": {
+            "url": "https://seu-projeto-production.up.railway.app/cep/{{cep}}",
+            "method": "GET",
+            "headers": {
+              "x-api-key": "NG_API_SK_1759414399452_aqmotc1wab70nels6brz2fo"
+            }
+          }
+        },
+        {
+          "module": "HTTP > Make a Request", 
+          "config": {
+            "url": "https://seu-projeto-production.up.railway.app/revenda-mais-proxima",
+            "method": "POST",
+            "headers": {
+              "x-api-key": "NG_API_SK_1759414399452_aqmotc1wab70nels6brz2fo",
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "cep": "{{cep}}",
+              "tipo": "{{tipo_atendimento}}"
+            }
+          }
+        }
+      ]
+    },
+    "webhook_revenda": {
+      "name": "Webhook - Nova Revenda - Produção",
+      "description": "Recebe dados de nova revenda via webhook",
+      "steps": [
+        {
+          "module": "Webhooks > Custom Webhook",
+          "config": {
+            "url": "{{webhook_url}}/nova-revenda"
+          }
+        },
+        {
+          "module": "HTTP > Make a Request",
+          "config": {
+            "url": "https://seu-projeto-production.up.railway.app/revendas",
+            "method": "POST",
+            "headers": {
+              "x-api-key": "NG_API_SK_1759414399452_aqmotc1wab70nels6brz2fo",
+              "Content-Type": "application/json"
+            },
+            "body": "{{webhook_data}}"
+          }
+        }
+      ]
+    },
+    "health_check": {
+      "name": "Health Check - Produção",
+      "description": "Verifica se a API está funcionando",
+      "steps": [
+        {
+          "module": "HTTP > Make a Request",
+          "config": {
+            "url": "https://seu-projeto-production.up.railway.app/health",
+            "method": "GET"
+          }
+        }
+      ]
+    }
+  },
+  "environment_variables": {
+    "production": {
+      "API_URL": "https://seu-projeto-production.up.railway.app",
+      "API_KEY": "NG_API_SK_1759414399452_aqmotc1wab70nels6brz2fo"
+    },
+    "development": {
+      "API_URL": "http://localhost:3001",
+      "API_KEY": "NG_API_SK_1759414399452_aqmotc1wab70nels6brz2fo"
+    }
+  },
+  "testing": {
+    "test_cep": "60115000",
+    "test_coordinates": {
+      "lat": -3.73,
+      "lng": -38.52
+    },
+    "test_cnpj": "12345678000199",
+    "production_url": "https://seu-projeto-production.up.railway.app"
+  },
+  "security": {
+    "api_key": {
+      "name": "NACIONAL_GAS_API_KEY",
+      "value": "NG_API_SK_1759414399452_aqmotc1wab70nels6brz2fo",
+      "description": "Chave de API para autenticação"
+    },
+    "cors": {
+      "allowed_origins": [
+        "https://nacionalgas.com.br",
+        "https://app.minharevenda.com.br",
+        "https://gasdopovo.figma.site"
+      ]
+    },
+    "rate_limiting": {
+      "max_requests": 100,
+      "time_window": "1 minute"
+    }
+  }
+}

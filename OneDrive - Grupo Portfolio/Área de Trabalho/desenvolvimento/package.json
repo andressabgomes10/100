@@ -1,0 +1,61 @@
+{
+  "name": "revenda-proximidade-api",
+  "version": "1.0.0",
+  "description": "API para encontrar revenda mais próxima por CEP",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "rimraf dist && tsc",
+    "start": "node dist/server.js",
+    "start:prod": "NODE_ENV=production node dist/server.js",
+    "lint": "eslint . --ext .ts",
+    "seed": "tsx src/etl/seed.ts",
+    "etl:csv": "tsx src/etl/load-csv.ts",
+    "pm2:start": "pm2 start ecosystem.config.js --env production",
+    "pm2:stop": "pm2 stop revenda-api",
+    "pm2:restart": "pm2 restart revenda-api",
+    "pm2:reload": "pm2 reload revenda-api",
+    "pm2:logs": "pm2 logs revenda-api",
+    "pm2:monit": "pm2 monit",
+    "backup": "chmod +x backup.sh && ./backup.sh",
+    "deploy": "chmod +x deploy.sh && ./deploy.sh",
+    "monitor": "chmod +x monitor.sh && ./monitor.sh",
+    "docker:build": "docker build -t revenda-api .",
+    "docker:run": "docker run -p 3001:3001 --env-file .env revenda-api",
+    "docker:compose": "docker-compose up -d"
+  },
+  "keywords": [
+    "api",
+    "cep",
+    "revenda",
+    "proximidade",
+    "fastify",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@fastify/cors": "^8.4.0",
+    "@fastify/rate-limit": "^8.0.3",
+    "@supabase/supabase-js": "^2.58.0",
+    "csv-parse": "^5.5.2",
+    "dotenv": "^16.3.1",
+    "fastify": "^4.24.3",
+    "node-fetch": "^3.3.2",
+    "pino": "^8.16.2",
+    "pino-pretty": "^10.2.3",
+    "uuid": "^9.0.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.7",
+    "@types/node-fetch": "^2.6.9",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "eslint": "^8.50.0",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.1",
+    "tsx": "^3.14.0",
+    "typescript": "^5.2.2"
+  }
+}

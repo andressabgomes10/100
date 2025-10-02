@@ -1,0 +1,11 @@
+# Railway Configuration
+# Este arquivo ajuda o Railway a detectar que é um projeto Node.js
+
+# Build command
+npm ci && npm run build
+
+# Start command  
+npm start
+
+# Health check
+curl -f http://localhost:$PORT/health || exit 1

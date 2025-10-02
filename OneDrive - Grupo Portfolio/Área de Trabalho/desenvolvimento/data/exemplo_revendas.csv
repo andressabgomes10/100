@@ -1,0 +1,6 @@
+cnpj,nome_fantasia,razao_social,cep,endereco,bairro,cidade,uf,telefone,whatsapp,latitude,longitude,ativo,service_radius_km,prioridade,atende_empresarial,atende_residencial
+12345678000199,Revenda Centro,Revenda Centro Ltda,60000000,Rua da Liberdade 123,Centro,Fortaleza,CE,8533333333,5585999999999,-3.7172,-38.5434,true,10,5,true,true
+98765432000188,Revenda Aldeota,Revenda Aldeota S.A.,60115000,Rua Dr. José Lourenço 456,Aldeota,Fortaleza,CE,8533334444,5585888888888,-3.7300,-38.5200,true,15,3,true,true
+11223344000177,Revenda Meireles,Revenda Meireles Ltda,60160000,Av. Beira Mar 789,Meireles,Fortaleza,CE,8533335555,5585777777777,-3.7500,-38.5000,true,8,4,false,true
+55667788000166,Revenda Benfica,Revenda Benfica Eireli,60020000,Rua Barão do Rio Branco 321,Benfica,Fortaleza,CE,8533336666,5585666666666,-3.7000,-38.5500,true,12,2,true,false
+99887766000155,Revenda Parangaba,Revenda Parangaba Ltda,60710000,Rua da Parangaba 654,Parangaba,Fortaleza,CE,8533337777,5585555555555,-3.6800,-38.5800,false,20,1,true,true

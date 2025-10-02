@@ -1,0 +1,51 @@
+# Dependências
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Arquivos de build
+dist/
+build/
+*.tsbuildinfo
+
+# Arquivos de ambiente
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+
+# Arquivos temporários
+.tmp/
+.temp/
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos do IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arquivos de cache
+.cache/
+.parcel-cache/
+
+# Arquivos de backup
+*.bak
+*.backup
+
+# Arquivos específicos do Windows
+*.lnk
+desktop.ini
+
+# Arquivos específicos do projeto
+db/*.json
+!db/revendas.json
