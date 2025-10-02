@@ -119,30 +119,37 @@ class CNPJService:
     @staticmethod
     def _format_address(data: Dict) -> str:
         """
-        Formata endereço completo a partir dos dados da API
+        Formata endereço completo a partir dos dados da BrasilAPI
         """
         parts = []
         
-        if data.get('street'):
-            parts.append(data['street'])
+        # Tipo de logradouro + logradouro
+        if data.get('descricao_tipo_de_logradouro') and data.get('logradouro'):
+            parts.append(f"{data['descricao_tipo_de_logradouro']} {data['logradouro']}")
+        elif data.get('logradouro'):
+            parts.append(data['logradouro'])
         
-        if data.get('number'):
-            parts.append(data['number'])
+        if data.get('numero'):
+            parts.append(data['numero'])
         
-        if data.get('complement'):
-            parts.append(data['complement'])
+        if data.get('complemento'):
+            parts.append(data['complemento'])
         
-        if data.get('district'):
-            parts.append(data['district'])
+        if data.get('bairro'):
+            parts.append(data['bairro'])
         
-        if data.get('city'):
-            parts.append(data['city'])
+        if data.get('municipio'):
+            parts.append(data['municipio'])
         
-        if data.get('state'):
-            parts.append(data['state'])
+        if data.get('uf'):
+            parts.append(data['uf'])
         
-        if data.get('zip'):
-            parts.append(f"CEP: {data['zip']}")
+        if data.get('cep'):
+            # Formatar CEP
+            cep = data['cep']
+            if len(cep) == 8:
+                cep = f"{cep[:5]}-{cep[5:]}"
+            parts.append(f"CEP: {cep}")
         
         return ", ".join([p for p in parts if p])
     
