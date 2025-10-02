@@ -37,7 +37,7 @@ export const AdminPanel = () => {
   const fetchStats = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API}/data/stats`);
+      const response = await axios.get(`${API}/data/optimized-stats`);
       if (response.data.success) {
         setStats(response.data.data);
       }
