@@ -32,6 +32,7 @@ db = client[os.environ['DB_NAME']]
 
 # Initialize services
 reseller_service = ResellerService(db)
+data_enrichment_service = DataEnrichmentService(db)
 
 # Create the main app without a prefix
 app = FastAPI(title="Nacional Gás - Reseller Locator API", version="1.0.0")
