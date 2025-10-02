@@ -49,43 +49,43 @@ export const AdminPanel = () => {
     }
   };
 
-  const handleImportCSV = async () => {
+  const handleImportOptimized = async () => {
     try {
       setLoading(true);
-      toast.info('Iniciando importação do CSV...');
+      toast.info('🚀 Iniciando importação otimizada...');
       
-      const response = await axios.post(`${API}/data/import-csv`);
+      const response = await axios.post(`${API}/data/import-optimized`);
       
       if (response.data.success) {
-        toast.success(`✅ ${response.data.total_imported} revendas importadas com sucesso!`);
+        toast.success(`✅ ${response.data.total_imported} revendas importadas com dados otimizados!`);
         fetchStats();
       } else {
         toast.error('Erro na importação: ' + response.data.message);
       }
     } catch (error) {
-      console.error('Erro na importação:', error);
-      toast.error('Erro na importação do CSV');
+      console.error('Erro na importação otimizada:', error);
+      toast.error('Erro na importação otimizada');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEnrichAll = async () => {
+  const handleSmartEnrich = async () => {
     try {
       setEnrichmentRunning(true);
-      toast.info('🚀 Iniciando enriquecimento de dados... Isso pode demorar alguns minutos.');
+      toast.info('🧠 Iniciando enriquecimento inteligente... Processamento otimizado!');
       
-      const response = await axios.post(`${API}/data/enrich-all`);
+      const response = await axios.post(`${API}/data/smart-enrich`);
       
       if (response.data.success) {
-        toast.success(`✅ ${response.data.total_enriched} revendas enriquecidas com sucesso!`);
+        toast.success(`✅ ${response.data.total_enriched} revendas enriquecidas inteligentemente!`);
         fetchStats();
       } else {
         toast.error('Erro no enriquecimento: ' + response.data.message);
       }
     } catch (error) {
-      console.error('Erro no enriquecimento:', error);
-      toast.error('Erro no enriquecimento de dados');
+      console.error('Erro no enriquecimento inteligente:', error);
+      toast.error('Erro no enriquecimento inteligente');
     } finally {
       setEnrichmentRunning(false);
     }
