@@ -69,6 +69,11 @@ class ResellerService:
             
             for reseller in resellers:
                 try:
+                    # Verifica se a revenda tem coordenadas
+                    if not reseller.coordinates or not hasattr(reseller.coordinates, 'lat') or not hasattr(reseller.coordinates, 'lng'):
+                        logger.warning(f"Revenda {reseller.name} não tem coordenadas válidas. Pulando...")
+                        continue
+                    
                     reseller_coords = (reseller.coordinates.lat, reseller.coordinates.lng)
                     distance = DistanceService.calculate_distance_from_cep(cep_coords, reseller_coords)
                     
