@@ -5,7 +5,7 @@ from typing import List, Dict, Optional
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from models.reseller import Reseller, ResellerCreate, CNPJData, Coordinates
 from services.cnpj_service import CNPJService
-from services.geocoding_service import GeocodingService
+from services.enhanced_geocoding_service import enhanced_geocoding_service
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
