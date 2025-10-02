@@ -1,0 +1,32 @@
+{
+  "name": "revenda-proximidade-api",
+  "description": "API para encontrar revenda mais próxima por CEP",
+  "repository": "https://github.com/andressabgomes/apirevenda.git",
+  "keywords": ["api", "cep", "revenda", "proximidade", "fastify", "typescript"],
+  "success_url": "/health",
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "env": {
+    "NODE_ENV": {
+      "description": "Environment",
+      "value": "production"
+    },
+    "PORT": {
+      "description": "Port",
+      "value": "3001"
+    },
+    "API_KEY": {
+      "description": "API Key",
+      "value": "NG_API_SK_1759414399452_aqmotc1wab70nels6brz2fo"
+    }
+  }
+}
