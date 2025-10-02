@@ -291,13 +291,13 @@ export const AdminPanel = () => {
                 </div>
 
                 {enrichmentRunning && (
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-4">
                     <div className="flex items-center">
                       <RefreshCw className="h-5 w-5 text-blue-600 mr-2 animate-spin" />
                       <div>
-                        <p className="text-blue-900 font-medium">Enriquecimento em Progresso</p>
+                        <p className="text-blue-900 font-medium">🧠 Enriquecimento Inteligente em Progresso</p>
                         <p className="text-blue-700 text-sm">
-                          Processando dados... As estatísticas são atualizadas automaticamente.
+                          Processamento otimizado com Google Maps • Priorização inteligente • Estatísticas atualizadas automaticamente
                         </p>
                       </div>
                     </div>
