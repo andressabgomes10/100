@@ -191,12 +191,12 @@ class DataEnrichmentService:
                     )
                     continue
                 
-                # 2. Busca coordenadas do endereço
+                # 2. Busca coordenadas do endereço com Google Maps
                 coordinates = None
                 geocoding_source = None
                 
                 if cnpj_data.get('endereco_completo'):
-                    coord_data = await GeocodingService.get_coordinates_from_address(
+                    coord_data = await enhanced_geocoding_service.get_coordinates_from_address(
                         address=cnpj_data['endereco_completo'],
                         city=cnpj_data.get('cidade'),
                         state=cnpj_data.get('estado')
