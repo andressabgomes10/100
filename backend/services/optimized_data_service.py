@@ -176,7 +176,7 @@ class OptimizedDataService:
                                 {"$cond": [{"$ne": ["$address", ""]}, 10, 0]},
                                 {"$cond": [{"$ne": ["$city", ""]}, 5, 0]},
                                 {"$cond": [{"$ne": ["$phone", ""]}, 3, 0]},
-                                {"$cond": [{"$exists": "$coordinates"}, -20, 0]},  # Menos prioridade se já tem coords
+                                {"$cond": [{"$ne": ["$coordinates", None]}, -20, 0]},  # Menos prioridade se já tem coords
                                 {"$multiply": ["$priority", 2]}  # Duplica prioridade do negócio
                             ]
                         }
