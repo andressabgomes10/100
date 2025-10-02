@@ -210,73 +210,73 @@ async def geocode_address(request: GeocodeRequest):
         )
 
 # APIs para processamento de dados
-@api_router.post("/data/import-csv", response_model=ImportCSVResponse)
-async def import_csv_data():
+# APIs otimizadas para processamento de dados
+@api_router.post("/data/import-optimized", response_model=ImportCSVResponse)
+async def import_optimized_data():
     """
-    Importa dados do CSV de revendas
+    Importa dados do CSV normalizado otimizado
     """
     try:
-        csv_path = "/app/backend/data/revendas.csv"
-        result = await data_enrichment_service.import_csv_file(csv_path)
+        result = await optimized_data_service.import_normalized_csv()
         
         return ImportCSVResponse(
             success=result['success'],
             message=result['message'],
             total_imported=result['total_imported'],
             total_enriched=0,
-            errors=result['errors']
+            errors=[]
         )
         
     except Exception as e:
-        logger.error(f"Erro na importação do CSV: {str(e)}")
+        logger.error(f"Erro na importação otimizada: {str(e)}")
         return ImportCSVResponse(
             success=False,
-            message=f"Erro na importação: {str(e)}",
+            message=f"Erro na importação otimizada: {str(e)}",
             total_imported=0,
             total_enriched=0,
             errors=[str(e)]
         )
 
-@api_router.post("/data/enrich-all", response_model=ImportCSVResponse)
-async def enrich_all_data():
+@api_router.post("/data/smart-enrich", response_model=ImportCSVResponse)
+async def smart_enrich_data():
     """
-    Enriquece dados de todas as revendas com informações de CNPJ e coordenadas
+    Enriquecimento inteligente de dados priorizando revendas mais importantes
     """
     try:
-        result = await data_enrichment_service.enrich_all_data(batch_size=5)
+        result = await optimized_data_service.smart_enrich_all_data(batch_size=15)
         
         return ImportCSVResponse(
             success=result['success'],
             message=result['message'],
             total_imported=result['total_processed'],
             total_enriched=result['total_enriched'],
-            errors=result.get('errors', [])
+            errors=[]
         )
         
     except Exception as e:
-        logger.error(f"Erro no enriquecimento de dados: {str(e)}")
+        logger.error(f"Erro no enriquecimento inteligente: {str(e)}")
         return ImportCSVResponse(
             success=False,
-            message=f"Erro no enriquecimento: {str(e)}",
+            message=f"Erro no enriquecimento inteligente: {str(e)}",
             total_imported=0,
             total_enriched=0,
             errors=[str(e)]
         )
 
-@api_router.get("/data/stats")
-async def get_data_stats():
+@api_router.get("/data/optimized-stats")
+async def get_optimized_stats():
     """
-    Retorna estatísticas dos dados de revendas
+    Retorna estatísticas otimizadas e detalhadas dos dados
     """
     try:
-        stats = await data_enrichment_service.get_enrichment_stats()
+        stats = await optimized_data_service.get_optimization_stats()
         return {
             "success": True,
             "data": stats
         }
         
     except Exception as e:
-        logger.error(f"Erro ao obter estatísticas: {str(e)}")
+        logger.error(f"Erro ao obter estatísticas otimizadas: {str(e)}")
         return {
             "success": False,
             "message": f"Erro: {str(e)}"
