@@ -52,47 +52,69 @@ class OptimizedDataService:
             
             for record in records:
                 try:
+                    # Função auxiliar para limpar dados
+                    def clean_value(value):
+                        if pd.isna(value) or str(value).lower() in ['nan', 'null', 'none', '']:
+                            return ''
+                        return str(value).strip()
+                    
+                    def clean_float(value, default=None):
+                        try:
+                            if pd.isna(value) or str(value).lower() in ['nan', 'null', 'none', '']:
+                                return default
+                            return float(value)
+                        except (ValueError, TypeError):
+                            return default
+                    
+                    def clean_bool(value, default=True):
+                        if pd.isna(value):
+                            return default
+                        return bool(value)
+                    
                     # Normaliza CNPJ
                     cnpj = CNPJService.normalize_cnpj(str(record.get('cnpj', '')))
                     if not cnpj or len(cnpj) != 14:
                         continue
                     
+                    # Limpa todos os dados
+                    address = clean_value(record.get('endereco'))
+                    city = clean_value(record.get('cidade'))
+                    state = clean_value(record.get('uf'))
+                    
                     # Cria revenda otimizada
                     reseller_data = {
-                        'name': str(record.get('razao_social', '')).strip(),
+                        'name': clean_value(record.get('razao_social')),
                         'cnpj': cnpj,
-                        'address': str(record.get('endereco', '')).strip(),
-                        'neighborhood': str(record.get('bairro', '')).strip(),
-                        'city': str(record.get('cidade', '')).strip(),
-                        'state': str(record.get('uf', '')).strip(),
-                        'cep': str(record.get('cep', '')).strip(),
-                        'phone': str(record.get('telefone', '')).strip(),
-                        'whatsapp': str(record.get('whatsapp', '')).strip(),
+                        'address': address,
+                        'neighborhood': clean_value(record.get('bairro')),
+                        'city': city,
+                        'state': state,
+                        'cep': clean_value(record.get('cep')),
+                        'phone': clean_value(record.get('telefone')),
+                        'whatsapp': clean_value(record.get('whatsapp')),
                         'hours': 'Segunda a Sábado: 8h às 18h',  # Default
-                        'active': record.get('ativo', True),
-                        'data_enriched': False,
-                        'service_radius_km': float(record.get('service_radius_km', 10)) if record.get('service_radius_km') else 10,
-                        'priority': int(record.get('prioridade', 0)) if record.get('prioridade') else 0,
-                        'serves_business': record.get('atende_empresarial', True),
-                        'serves_residential': record.get('atende_residencial', True),
-                        'preferred_channel': str(record.get('canal_preferencial', 'phone')).strip()
+                        'active': clean_bool(record.get('ativo'), True),
+                        'data_enriched': False,  # Inicialmente não enriquecido
+                        'service_radius_km': clean_float(record.get('service_radius_km'), 10.0),
+                        'priority': int(clean_float(record.get('prioridade'), 0)),
+                        'serves_business': clean_bool(record.get('atende_empresarial'), True),
+                        'serves_residential': clean_bool(record.get('atende_residencial'), True),
+                        'preferred_channel': clean_value(record.get('canal_preferencial')) or 'phone'
                     }
                     
-                    # Adiciona coordenadas se existirem
-                    if record.get('latitude') and record.get('longitude'):
-                        try:
-                            lat = float(record['latitude'])
-                            lng = float(record['longitude'])
-                            reseller_data['coordinates'] = {'lat': lat, 'lng': lng}
-                            reseller_data['geocoding_source'] = 'normalized_data'
-                            reseller_data['data_enriched'] = True
-                        except (ValueError, TypeError):
-                            reseller_data['coordinates'] = None
+                    # Adiciona coordenadas se existirem e forem válidas
+                    lat = clean_float(record.get('latitude'))
+                    lng = clean_float(record.get('longitude'))
+                    
+                    if lat is not None and lng is not None and not (pd.isna(lat) or pd.isna(lng)):
+                        reseller_data['coordinates'] = {'lat': lat, 'lng': lng}
+                        reseller_data['geocoding_source'] = 'normalized_data'
+                        reseller_data['data_enriched'] = True
                     else:
                         reseller_data['coordinates'] = None
                     
-                    # Se tem endereço mas não tem coordenadas, marca para enriquecimento
-                    if reseller_data['address'] and not reseller_data['coordinates']:
+                    # Se tem endereço válido mas não tem coordenadas, marca para geocoding
+                    if address and city and not reseller_data['coordinates']:
                         reseller_data['needs_geocoding'] = True
                     
                     reseller = Reseller(**reseller_data)
