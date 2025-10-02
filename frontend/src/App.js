@@ -28,6 +28,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<ResellerLocator />} />
+          <Route path="/admin" element={<AdminPanel />} />
         </Routes>
         <Toaster />
       </BrowserRouter>
