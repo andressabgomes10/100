@@ -1,6 +1,7 @@
 import httpx
 import re
 from typing import Optional, Dict
+from services.enhanced_geocoding_service import enhanced_geocoding_service
 
 class CEPService:
     @staticmethod
