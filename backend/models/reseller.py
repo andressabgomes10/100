@@ -37,18 +37,20 @@ class Reseller(BaseModel):
 
 class ResellerCreate(BaseModel):
     name: str
-    address: str
-    neighborhood: str
-    city: str
-    state: str
-    cep: str
-    phone: str
-    hours: str
-    coordinates: Coordinates
+    cnpj: Optional[str] = None
+    address: Optional[str] = None
+    neighborhood: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    cep: Optional[str] = None
+    phone: Optional[str] = None
+    hours: Optional[str] = None
+    coordinates: Optional[Coordinates] = None
 
 class ResellerResponse(BaseModel):
     id: str
     name: str
+    cnpj: Optional[str] = None
     address: str
     neighborhood: str
     city: str
@@ -57,6 +59,8 @@ class ResellerResponse(BaseModel):
     phone: str
     hours: str
     distance: Optional[float] = None
+    coordinates: Optional[Coordinates] = None
+    data_enriched: bool = False
 
 class SearchRequest(BaseModel):
     cep: str
@@ -66,3 +70,32 @@ class SearchResponse(BaseModel):
     data: List[ResellerResponse]
     total: int
     message: Optional[str] = None
+
+class CNPJRequest(BaseModel):
+    cnpj: str
+
+class CNPJResponse(BaseModel):
+    success: bool
+    data: Optional[CNPJData] = None
+    message: Optional[str] = None
+
+class GeocodeRequest(BaseModel):
+    address: str
+    city: Optional[str] = None
+    state: Optional[str] = None
+
+class GeocodeResponse(BaseModel):
+    success: bool
+    data: Optional[Coordinates] = None
+    message: Optional[str] = None
+
+class ImportCSVRequest(BaseModel):
+    file_path: Optional[str] = None
+    process_all: bool = True
+
+class ImportCSVResponse(BaseModel):
+    success: bool
+    message: str
+    total_imported: int
+    total_enriched: int
+    errors: List[str] = []
