@@ -20,7 +20,7 @@ from services.reseller_service import ResellerService
 from services.cep_service import CEPService
 from services.cnpj_service import CNPJService
 from services.enhanced_geocoding_service import enhanced_geocoding_service
-from services.data_enrichment_service import DataEnrichmentService
+from services.optimized_data_service import OptimizedDataService
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
