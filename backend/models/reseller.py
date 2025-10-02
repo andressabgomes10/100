@@ -27,11 +27,18 @@ class Reseller(BaseModel):
     state: str
     cep: str
     phone: str
+    whatsapp: Optional[str] = None
     hours: str
     coordinates: Optional[Coordinates] = None
-    geocoding_source: Optional[str] = None  # 'nominatim', 'manual', etc
+    geocoding_source: Optional[str] = None  # 'nominatim', 'google_maps', 'manual', etc
     active: bool = True
     data_enriched: bool = False  # Flag para indicar se os dados foram enriquecidos
+    needs_geocoding: Optional[bool] = False  # Flag para otimizar processamento
+    service_radius_km: Optional[float] = 10.0  # Raio de atendimento
+    priority: Optional[int] = 0  # Prioridade da revenda
+    serves_business: Optional[bool] = True  # Atende empresarial
+    serves_residential: Optional[bool] = True  # Atende residencial
+    preferred_channel: Optional[str] = 'phone'  # Canal preferencial de contato
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
