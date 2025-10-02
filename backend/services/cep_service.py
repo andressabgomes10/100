@@ -27,7 +27,7 @@ class CEPService:
     @staticmethod
     async def get_coordinates_from_cep(cep: str) -> Optional[Dict[str, float]]:
         """
-        Obtém coordenadas a partir do CEP usando ViaCEP + OpenStreetMap Nominatim
+        Obtém coordenadas a partir do CEP usando Google Maps
         """
         try:
             # Limpa e valida CEP
@@ -35,29 +35,19 @@ class CEPService:
             if not CEPService.validate_cep(clean_cep):
                 return None
             
-            formatted_cep = CEPService.format_cep(clean_cep)
+            # Usa o enhanced geocoding service (Google Maps + fallback)
+            coord_data = await enhanced_geocoding_service.get_coordinates_from_cep(cep)
             
-            # Busca informações do CEP via ViaCEP
-            async with httpx.AsyncClient() as client:
-                viacep_response = await client.get(
-                    f"https://viacep.com.br/ws/{clean_cep}/json/",
-                    timeout=5.0
-                )
-                
-                if viacep_response.status_code != 200:
-                    return None
-                
-                viacep_data = viacep_response.json()
-                
-                if viacep_data.get('erro'):
-                    return None
-                
-                # Monta endereço para geocoding
-                address_parts = []
-                if viacep_data.get('logradouro'):
-                    address_parts.append(viacep_data['logradouro'])
-                if viacep_data.get('bairro'):
-                    address_parts.append(viacep_data['bairro'])
+            if coord_data:
+                return {
+                    'lat': coord_data['lat'],
+                    'lng': coord_data['lng']
+                }
+            
+            return None
+            
+        except Exception as e:
+            return None
                 if viacep_data.get('localidade'):
                     address_parts.append(viacep_data['localidade'])
                 if viacep_data.get('uf'):
