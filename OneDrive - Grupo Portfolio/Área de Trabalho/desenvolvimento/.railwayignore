@@ -1,25 +1,40 @@
+# Ignorar diretórios do sistema
+OneDrive - Grupo Portfolio/
+OneDrive*/
+
+# Ignorar dependências e cache
 node_modules/
-.git/
-.gitignore
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.npm/
+.pnpm-debug.log*
+
+# Ignorar arquivos de ambiente
+.env*
+!.env.example
+
+# Ignorar logs
 *.log
 logs/
+
+# Ignorar arquivos temporários
 .tmp/
 .temp/
+.cache/
+
+# Ignorar arquivos do sistema
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# Ignorar arquivos do IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-.cache/
-.parcel-cache/
+
+# Ignorar arquivos de backup
 *.bak
 *.backup
-*.lnk
-desktop.ini
-OneDrive - Grupo Portfolio/
+
+# Ignorar arquivos de build local
+dist/
+build/
