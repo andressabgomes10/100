@@ -11,9 +11,16 @@ import uuid
 from datetime import datetime
 
 # Import models and services
-from models.reseller import SearchRequest, SearchResponse, ResellerResponse
+from models.reseller import (
+    SearchRequest, SearchResponse, ResellerResponse, 
+    CNPJRequest, CNPJResponse, GeocodeRequest, GeocodeResponse,
+    ImportCSVRequest, ImportCSVResponse
+)
 from services.reseller_service import ResellerService
 from services.cep_service import CEPService
+from services.cnpj_service import CNPJService
+from services.geocoding_service import GeocodingService
+from services.data_enrichment_service import DataEnrichmentService
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
