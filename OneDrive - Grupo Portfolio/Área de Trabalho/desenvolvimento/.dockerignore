@@ -3,14 +3,18 @@ npm-debug.log
 .git
 .gitignore
 README.md
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env*
 .DS_Store
 .vscode
 .idea
 *.swp
 *.swo
-OneDrive - Grupo Portfolio
+OneDrive*
+dist
+*.log
+logs
+.tmp
+.temp
+.cache
+*.bak
+*.backup
