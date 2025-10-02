@@ -1,40 +1,8 @@
-# Ignorar diretórios do sistema
-OneDrive - Grupo Portfolio/
-OneDrive*/
+# Ignorar tudo exceto o diretório desenvolvimento
+API/
+bkp/
+Landing/
+*.lnk
 
-# Ignorar dependências e cache
-node_modules/
-.npm/
-.pnpm-debug.log*
-
-# Ignorar arquivos de ambiente
-.env*
-!.env.example
-
-# Ignorar logs
-*.log
-logs/
-
-# Ignorar arquivos temporários
-.tmp/
-.temp/
-.cache/
-
-# Ignorar arquivos do sistema
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Ignorar arquivos do IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Ignorar arquivos de backup
-*.bak
-*.backup
-
-# Ignorar arquivos de build local
-dist/
-build/
+# Manter apenas o diretório desenvolvimento
+!desenvolvimento/

@@ -2,11 +2,11 @@
   "name": "revenda-proximidade-api",
   "version": "1.0.0",
   "description": "API para encontrar revenda mais próxima por CEP",
-  "main": "dist/server.js",
+  "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "rimraf dist && tsc",
-    "start": "node dist/server.js",
+    "start": "node index.js",
     "start:prod": "NODE_ENV=production node dist/server.js",
     "lint": "eslint . --ext .ts",
     "seed": "tsx src/etl/seed.ts",
